@@ -66,7 +66,10 @@ endGame (GameState pl (Field l))    | l!!0 == l!!1 && l!!1 == l!!2 && l!!0 /= Em
                                     | l!!0 == l!!3 && l!!3 == l!!6 && l!!0 /= Empty = True
                                     | l!!1 == l!!4 && l!!4 == l!!7 && l!!1 /= Empty = True
                                     | l!!2 == l!!5 && l!!5 == l!!8 && l!!2 /= Empty = True
-                                    | otherwise = Empty `notElem` l
+                                    | otherwise = draw (GameState pl (Field l)) 
+
+draw :: GameState -> Bool
+draw (GameState pl (Field l)) = Empty `notElem` l
 
 getPlayer :: GameState -> Player
 getPlayer (GameState pl _) = pl
@@ -79,7 +82,8 @@ gameLoopPvP game = do
     if newt == game then putStrLn "You can't!" else putStrLn ""
     print newt
     if endGame newt then do
-        putStr (player ++ " Win!")
+        if draw newt then putStr "Draw!"
+        else putStr (player ++ " Win!")
         putStr " Again? y/n\n> "
         hFlush stdout
         ans <- getLine
